@@ -11,15 +11,16 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final CustomerRepo customerRepo;
+    private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public String login(String email, String password) {
         Customer customer = customerRepo.findByEmail(email);
 
         if (customer != null && passwordEncoder.matches(password, customer.getPassword())) {
-            return "User logged in successfully.";
+            return jwtUtil.generateToken(email);
         } else {
-            return "Invalid username or password.";
+            return "Invalid email or password";
         }
     }
 }
