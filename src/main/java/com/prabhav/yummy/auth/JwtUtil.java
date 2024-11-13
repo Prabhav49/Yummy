@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JwtUtil {  // Rename the class to "JwtUtil"
+public class JwtUtil {
     private final SecretKey SECRET_KEY;
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
 
@@ -40,13 +40,25 @@ public class JwtUtil {  // Rename the class to "JwtUtil"
         return (extractedEmail.equals(email) && !isTokenExpired(token));
     }
 
-    private String extractEmail(String token) {
+    public boolean isTokenValid(String token, String email) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);  // Remove the "Bearer " part
+        }
+        token = token.trim();  // Remove any extra spaces
+
+        final String extractedEmail = extractEmail(token);
+        return (extractedEmail.equals(email) && !isTokenExpired(token));
+
+    }
+
+    public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
