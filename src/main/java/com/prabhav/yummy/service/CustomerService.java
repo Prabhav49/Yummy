@@ -27,7 +27,7 @@ public class CustomerService {
     public String updateCustomer(CustomerRequest request) {
         Customer customer = repo.findByEmail(request.email());
         if (customer == null) {
-            throw new RuntimeException("Customer not found");
+            return "Customer Not Found";
         }
 
         customer.setFirstName(request.firstName());
@@ -40,12 +40,13 @@ public class CustomerService {
         return "Customer updated successfully";
     }
 
-    public void deleteCustomerByEmail(String email) {
+    public String deleteCustomerByEmail(String email) {
         Customer customer = repo.findByEmail(email);
         if (customer != null) {
             repo.delete(customer);
+            return "Customer deleted successfully";
         } else {
-            throw new RuntimeException("Customer not found");
+            return "Customer Not Found";
         }
     }
 }
