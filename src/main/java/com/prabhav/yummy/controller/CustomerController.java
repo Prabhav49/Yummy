@@ -33,13 +33,21 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteCustomer(@RequestHeader("Authorization") String token, @RequestBody @Valid CustomerRequest request) {
-        if (!jwtUtil.isTokenValid(token, request.email())) {
-            return ResponseEntity.status(401).body("Invalid JWT token");
+    public ResponseEntity<String> deleteCustomer(@RequestHeader("Authorization") String token,
+                                                 @RequestBody @Valid CustomerRequest request) {
+        // Remove Bearer prefix and trim the token
+        String trimmedToken = token.startsWith("Bearer ") ? token.substring(7).trim() : token.trim();
+
+        if (!jwtUtil.isTokenValid(trimmedToken, request.email())) {
+            return ResponseEntity.status(401).body("Invalid or expired JWT token");
         }
 
-        String email = jwtUtil.extractEmail(token);
-        customerService.deleteCustomerByEmail(email);
+        // Extract email from the token to match with the provided email
+        String emailFromToken = jwtUtil.extractEmail(trimmedToken);
+
+        // Now we can use emailFromToken for validation or deletion logic
+        customerService.deleteCustomerByEmail(emailFromToken);
+
         return ResponseEntity.ok("Account deleted successfully");
     }
 }
