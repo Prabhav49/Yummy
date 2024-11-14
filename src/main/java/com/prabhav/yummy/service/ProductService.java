@@ -29,8 +29,13 @@ public class ProductService {
         return productRepo.save(product);
     }
 
-    public void deleteProduct(Long id) {
-        productRepo.deleteById(id);
+    public boolean deleteProductById(Long id) {
+        if (productRepo.existsById(id)) {
+            productRepo.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<Product> getTop2ProductsInRange() {

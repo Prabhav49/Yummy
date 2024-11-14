@@ -47,5 +47,15 @@ public class ProductController {
         List<Product> products = productService.getTop2ProductsInRange();
         return ResponseEntity.ok(products);
     }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+        boolean isDeleted = productService.deleteProductById(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("Product deleted successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }
