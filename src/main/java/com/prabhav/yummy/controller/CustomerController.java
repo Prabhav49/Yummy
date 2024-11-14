@@ -1,6 +1,7 @@
 package com.prabhav.yummy.controller;
 
 import com.prabhav.yummy.dto.CustomerRequest;
+import com.prabhav.yummy.dto.DeleteCustomerRequest;
 import com.prabhav.yummy.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteCustomer(@RequestBody @Valid CustomerRequest request) {
-        return ResponseEntity.ok(customerService.deleteCustomerByEmail(request.email()));
+    public ResponseEntity<String> deleteCustomer(@RequestBody @Valid DeleteCustomerRequest request) {
+        return ResponseEntity.ok(customerService.deleteCustomerByEmail(request.getEmail()));
     }
 }
