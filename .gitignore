@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+src/main/java/com/prabhav/yummy/config/WebConfig.java
+src/main/java/com/prabhav/yummy/interceptor/JwtInterceptor.java

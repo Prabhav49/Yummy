@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
-    // Use a consistent secret key
+
     private static final String SECRET = "cr666N7wIV+KJ2xOQpWtcfAekL4YXd9gbnJMs8SJ9sI=";
     private final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET));
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
@@ -34,9 +34,19 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean validateToken(String token, String email) {
-        final String extractedEmail = extractEmail(token);
-        return (extractedEmail.equals(email) && !isTokenExpired(token));
+    public boolean validateToken(String token) {
+        try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token); // Parse and validate the token
+            return true; // Token is valid
+        } catch (Exception e) {
+            return false; // Token is invalid or expired
+        }
     }
 
     public boolean isTokenValid(String token, String email) {
