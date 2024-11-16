@@ -1,5 +1,6 @@
 package com.prabhav.yummy.service;
 
+import com.prabhav.yummy.dto.UpdateCustomerRequest;
 import com.prabhav.yummy.entity.Customer;
 import com.prabhav.yummy.dto.CustomerRequest;
 import com.prabhav.yummy.mapper.CustomerMapper;
@@ -24,20 +25,52 @@ public class CustomerService {
         return "Created";
     }
 
-    public String updateCustomer(CustomerRequest request) {
-        Customer customer = repo.findByEmail(request.email());
+    public String updateCustomer(UpdateCustomerRequest request, String email) {
+        Customer customer = repo.findByEmail(email);
+
         if (customer == null) {
             return "Customer Not Found";
         }
 
-        customer.setFirstName(request.firstName());
-        customer.setLastName(request.lastName());
-        customer.setAddress(request.address());
-        customer.setCity(request.city());
-        customer.setPincode(Integer.parseInt(request.pincode()));
+        StringBuilder updatedFields = new StringBuilder();
+
+
+        if (request.getFirstName() != null) {
+            customer.setFirstName(request.getFirstName());
+            updatedFields.append("Name, ");
+        }
+        if (request.getLastName() != null) {
+            customer.setLastName(request.getLastName());
+            updatedFields.append("Last Name, ");
+        }
+        if (request.getAddress() != null) {
+            customer.setAddress(request.getAddress());
+            updatedFields.append("Address, ");
+        }
+        if (request.getCity() != null) {
+            customer.setCity(request.getCity());
+            updatedFields.append("City, ");
+        }
+        if (request.getPincode() != null) {
+            customer.setPincode(Integer.parseInt(request.getPincode()));
+            updatedFields.append("Pincode, ");
+        }
+        if (request.getPassword() != null) {
+            customer.setPassword(passwordEncoder.encode(request.getPassword()));
+            updatedFields.append("Password, ");
+        }
+
+        if (updatedFields.length() > 0) {
+            updatedFields.setLength(updatedFields.length() - 2);
+        }
 
         repo.save(customer);
-        return "Customer updated successfully";
+
+        if (updatedFields.length() > 0) {
+            return "Customer " + updatedFields.toString() + " updated successfully";
+        } else {
+            return "No fields were updated";
+        }
     }
 
     public String deleteCustomerByEmail(String email) {

@@ -2,6 +2,7 @@ package com.prabhav.yummy.controller;
 
 import com.prabhav.yummy.dto.CustomerRequest;
 import com.prabhav.yummy.dto.DeleteCustomerRequest;
+import com.prabhav.yummy.dto.UpdateCustomerRequest;
 import com.prabhav.yummy.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,13 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.createCustomer(request));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<String> updateCustomer(@RequestBody @Valid CustomerRequest request) {
-        return ResponseEntity.ok(customerService.updateCustomer(request));
+    @PutMapping("/update/{email}")
+    public ResponseEntity<String> updateCustomer(
+            @PathVariable String email,
+            @RequestBody @Valid UpdateCustomerRequest request) {
+
+        String response = customerService.updateCustomer(request, email);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete")

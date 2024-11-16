@@ -1,6 +1,7 @@
 package com.prabhav.yummy.controller;
 
 
+import com.prabhav.yummy.dto.ProductUpdateRequest;
 import com.prabhav.yummy.entity.Product;
 import com.prabhav.yummy.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +37,13 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
-        Product updatedProduct = productService.updateProduct(product);
-        return ResponseEntity.ok(updatedProduct);
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<String> updateProduct(
+            @PathVariable Long productId,
+            @RequestBody ProductUpdateRequest request) {
+
+        String response = productService.updateProduct(request, productId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/top2")
